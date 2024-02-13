@@ -1,0 +1,1 @@
+FROM ghcr.io/devcontainers/features/node:1

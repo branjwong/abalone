@@ -1,0 +1,19 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:0-18",
+    "forwardPorts": [
+        3000
+    ],
+    "customizations": {
+        // Configure properties specific to VS Code.
+        "vscode": {
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "eamodio.gitlens",
+                "GitHub.copilot-chat",
+                "GitHub.copilot",
+                "mhutchie.git-graph"
+            ]
+        }
+    },
+    "initializeCommand": "ls"
+}
