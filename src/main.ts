@@ -16,6 +16,8 @@ const board = new Board()
 // move the sprite to the center of the screen
 board.x = app.screen.width / 2;
 board.y = app.screen.height / 2;
+board.pivot.x = board.width / 2;
+board.pivot.y = board.height / 2;
 
 // add board
 app.stage.addChild(board);
