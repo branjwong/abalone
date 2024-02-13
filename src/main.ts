@@ -1,24 +1,23 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import * as PIXI from 'pixi.js';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+// Create a PixiJS application of type canvas with specify background color and make it resize to the iframe window
+const app = new PIXI.Application({
+    background: '#1099bb',
+    resizeTo: window,
+});
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+// Adding the application's view to the DOM
+document.querySelector<HTMLDivElement>('#app')!.appendChild(app.view)
+
+// create a new Sprite from an image path
+const circle = PIXI.Sprite.from('black-circle.png');
+
+// add to stage
+app.stage.addChild(circle);
+
+// center the sprite's anchor point
+circle.anchor.set(0.5);
+
+// move the sprite to the center of the screen
+circle.x = app.screen.width / 2;
+circle.y = app.screen.height / 2;
