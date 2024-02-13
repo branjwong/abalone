@@ -1,12 +1,13 @@
 import { Container } from 'pixi.js';
 import { Slot } from './Slot';
+import { Piece } from './Piece';
 
-const INDENT_PER_INDEX = 50;
-const SLOT_SIZE = 100;
-const SPACING = 10;
+const INDENT_PER_INDEX: number = 50;
+const SLOT_SIZE: number = 100;
+const SPACING: number = 10;
 
-const LONGEST_ROW_INDEX = 4;
-const HEIGHT = 9;
+const LONGEST_ROW_INDEX: number = 4;
+const HEIGHT: number = 9;
 
 export class Board extends Container {
     private slots: (Slot[])[] = [];
@@ -15,6 +16,8 @@ export class Board extends Container {
         super();
         this.createSlots();
         this.createBoard();
+
+        this.insertPiece(LONGEST_ROW_INDEX, LONGEST_ROW_INDEX, new Piece('red'));
     }
 
     /**
@@ -43,5 +46,9 @@ export class Board extends Container {
                 this.addChild(slot);
             });
         });
+    }
+
+    private insertPiece(x: number, y: number, piece: Piece) {
+        this.slots[x][y].insertPiece(piece);
     }
 }

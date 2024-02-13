@@ -1,7 +1,8 @@
 import { Container, Sprite } from 'pixi.js';
+import { Piece } from './Piece';
 
 export class Slot extends Container {
-    // private piece: Piece | null = null;
+    private piece: Piece | null = null;
 
     constructor() {
         super();
@@ -11,11 +12,16 @@ export class Slot extends Container {
         circle.scale.set(0.1);
     }
 
-    // public insertPiece(piece: Piece) {
-    //     this.piece = piece;
-    // }
+    public insertPiece(piece: Piece) {
+        this.removePiece();
+        this.piece = piece;
+        this.addChild(piece);
+    }
 
-    // public removePiece() {
-    //     this.piece = null;
-    // }
+    public removePiece() {
+        if (this.piece) {
+            this.removeChild(this.piece);
+        }
+        this.piece = null;
+    }
 }
