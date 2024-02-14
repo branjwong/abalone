@@ -1,6 +1,10 @@
 import { Container, Graphics, Sprite } from 'pixi.js';
 import { Piece } from './Piece';
 
+const EFFECT_SIZE = 49;
+const SELECT_COLOR = 0xfcba03;
+const OPTION_COLOR = 0xb5b2aa;
+
 export class Slot extends Container {
     /** The actual image of the piece */
     private readonly image: Sprite;
@@ -9,10 +13,14 @@ export class Slot extends Container {
     /** The actual image of the piece */
     private readonly optionEffect: Graphics;
 
-    private selected: boolean = false;
+    /** The row index of the piece */
+    public row: number = 0;
+    /** The column index of the piece */
+    public column: number = 0;
+
     private piece: Piece | null = null;
 
-    constructor() {
+    constructor(row: number, column: number) {
         super();
 
         this.image = Sprite.from('black-circle.png');
@@ -21,18 +29,21 @@ export class Slot extends Container {
         this.addChild(this.image);
 
         this.selectEffect = new Graphics();
-        this.selectEffect.beginFill(0xfcba03);
-        this.selectEffect.drawCircle(0, 0, 50);
+        this.selectEffect.beginFill(SELECT_COLOR);
+        this.selectEffect.drawCircle(0, 0, EFFECT_SIZE);
         this.selectEffect.endFill();
         this.addChild(this.selectEffect);
         this.selectEffect.visible = false;
 
         this.optionEffect = new Graphics();
-        this.optionEffect.beginFill(0xffffff);
-        this.optionEffect.drawCircle(0, 0, 50);
+        this.optionEffect.beginFill(OPTION_COLOR);
+        this.optionEffect.drawCircle(0, 0, EFFECT_SIZE);
         this.optionEffect.endFill();
         this.addChild(this.optionEffect);
         this.optionEffect.visible = false;
+
+        this.row = row;
+        this.column = column;
     }
 
     public insertPiece(piece: Piece) {
@@ -56,15 +67,22 @@ export class Slot extends Container {
     }
 
     public select() {
-        console.log("Slot selected")
-        this.selected = true;
+        console.log("Slot selected", this.row, this.column)
         this.selectEffect.visible = true;
     }
 
     public deselect() {
-        console.log("Slot deselected")
-        this.selected = true;
-        this.image.tint = 0x00ffff;
+        console.log("Slot deselected", this.row, this.column)
         this.selectEffect.visible = false;
+    }
+
+    public setHighlight() {
+        console.log("Slot highlighted", this.row, this.column)
+        this.optionEffect.visible = true;
+    }
+
+    public removeHighlight() {
+        console.log("Slot dehighlighted", this.row, this.column)
+        this.optionEffect.visible = false;
     }
 }

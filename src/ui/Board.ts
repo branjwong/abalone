@@ -1,19 +1,24 @@
 import { Container } from 'pixi.js';
 import { Slot } from './Slot';
 import { Piece } from './Piece';
-import { Position } from './Utility';
+import { Position, findOptions } from './Utility';
 
 const INDENT_PER_INDEX: number = 50;
 const SLOT_SIZE: number = 100;
 const SPACING: number = 10;
 
-const LONGEST_ROW_INDEX: number = 4;
-const HEIGHT: number = 9;
+const boardConfig = {
+    longestRowIndex: 4,
+    height: 9,
+};
+
+export type BoardConfig = typeof boardConfig;
 
 export class Board extends Container {
     private slots: (Slot[])[] = [];
 
-    private selectedSlot: Slot | null = null;
+    private slotSelections: Slot[] = [];
+    private slotOptions: Slot[] = [];
 
     constructor() {
         super();
@@ -21,16 +26,22 @@ export class Board extends Container {
         this.createBoard();
 
         this.insertPiece({ row: 4, column: 4 }, new Piece('red', this));
+        this.insertPiece({ row: 0, column: 0 }, new Piece('red', this));
+        this.insertPiece({ row: 0, column: 4 }, new Piece('red', this));
+        this.insertPiece({ row: 4, column: 0 }, new Piece('red', this));
+        this.insertPiece({ row: 4, column: 8 }, new Piece('red', this));
+        this.insertPiece({ row: 8, column: 0 }, new Piece('red', this));
+        this.insertPiece({ row: 8, column: 4 }, new Piece('red', this));
     }
 
     /**
      * Creates the slots on the board. The slots are stored in a 2D array.
      */
     private createSlots() {
-        for (let i = 0; i < HEIGHT; i++) {
+        for (let i = 0; i < boardConfig.height; i++) {
             const row: Slot[] = [];
-            for (let j = 0; j < -1 * Math.abs(i - LONGEST_ROW_INDEX) + HEIGHT; j++) {
-                row.push(new Slot());
+            for (let j = 0; j < -1 * Math.abs(i - boardConfig.longestRowIndex) + boardConfig.height; j++) {
+                row.push(new Slot(i, j));
             }
             this.slots.push(row);
         }
@@ -42,7 +53,7 @@ export class Board extends Container {
     private createBoard() {
         this.slots.forEach((row, rowIndex) => {
             row.forEach((slot, slotIndex) => {
-                const indent = Math.abs(rowIndex - LONGEST_ROW_INDEX) * INDENT_PER_INDEX;
+                const indent = Math.abs(rowIndex - boardConfig.longestRowIndex) * INDENT_PER_INDEX;
 
                 slot.x = indent + slotIndex * (SLOT_SIZE + SPACING);
                 slot.y = rowIndex * (SLOT_SIZE + SPACING);
@@ -57,13 +68,35 @@ export class Board extends Container {
         piece.column = position.column;
     }
 
-    public selectSlot(position: Position) {
-        if (this.selectedSlot) {
-            this.selectedSlot.deselect();
-            this.selectedSlot = null;
+    public selectSlot(position: Position): void {
+        if (this.slotSelections.length === 1) {
+            const positions = this.getSelectedPositions();
+            findOptions(positions, boardConfig).forEach((position) => this.removeHighlight(position));
+
+            this.slotSelections.forEach((slot) => slot.deselect());
+            this.slotSelections = [];
         } else {
-            this.selectedSlot = this.slots[position.row][position.column];
-            this.selectedSlot.select();
+            this.slotSelections = [this.slots[position.row][position.column]];
+            this.slotSelections.forEach((slot) => slot.select());
+
+            const positions = this.getSelectedPositions();
+            findOptions(positions, boardConfig).forEach((position) => this.setHighlight(position));
         }
+    }
+
+    private setHighlight(position: Position): void {
+        this.slots[position.row][position.column].setHighlight();
+    }
+
+    private removeHighlight(position: Position): void {
+        this.slots[position.row][position.column].removeHighlight();
+    }
+
+    public getSelectedPositions(): Position[] {
+        return this.slotSelections.map((slot) => ({ row: slot.row, column: slot.column }));
+    }
+
+    public getOptionPosititions(): Position[] {
+        return this.slotOptions.map((slot) => ({ row: slot.row, column: slot.column }));
     }
 }

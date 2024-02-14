@@ -11,7 +11,8 @@
                 "eamodio.gitlens",
                 "GitHub.copilot-chat",
                 "GitHub.copilot",
-                "mhutchie.git-graph"
+                "mhutchie.git-graph",
+                "esbenp.prettier-vscode"
             ]
         }
     },

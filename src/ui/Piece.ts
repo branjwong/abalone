@@ -52,7 +52,7 @@ export class Piece extends Container {
     private onPointerDown = (e: FederatedPointerEvent) => {
         if (this.isLocked()) return;
 
-        console.log('Piece selected')
+        console.log('Piece touched')
         this.board.selectSlot({ row: this.row, column: this.column });
     };
 
