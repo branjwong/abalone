@@ -57,8 +57,9 @@ export class Board extends Container {
         piece.column = position.column;
     }
 
-    public selectPiece(position: Position) {
+    public selectSlot(position: Position) {
         if (this.selectedSlot) {
+            this.selectedSlot.deselect();
             this.selectedSlot = null;
         } else {
             this.selectedSlot = this.slots[position.row][position.column];

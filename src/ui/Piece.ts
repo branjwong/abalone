@@ -18,18 +18,19 @@ export class Piece extends Container {
         super();
         this.board = board;
 
-        this.area = Sprite.from(Texture.WHITE);
-        this.area.anchor.set(0.5);
-        this.area.alpha = 0;
-        this.addChild(this.area);
-        this.area.eventMode = 'static';
-
         this.image = new Graphics();
         this.image.beginFill(0xffffff);
         this.image.drawCircle(0, 0, 45);
         this.image.endFill();
         this.fillColor(color);
         this.addChild(this.image);
+
+        this.area = Sprite.from(Texture.WHITE);
+        this.area.anchor.set(0.5);
+        this.area.scale.set(6);
+        this.area.alpha = 0;
+        this.addChild(this.area);
+        this.area.eventMode = 'static';
 
         this.area.on('pointerdown', this.onPointerDown);
     }
@@ -47,16 +48,15 @@ export class Piece extends Container {
         }
     }
 
-
     /** Interaction mouse/touch down handler */
     private onPointerDown = (e: FederatedPointerEvent) => {
-        this.board.selectPiece(this);
+        if (this.isLocked()) return;
+
         console.log('Piece selected')
+        this.board.selectSlot({ row: this.row, column: this.column });
     };
 
-
-
-    /** CHeck if piece is locked */
+    /** Check if piece is locked */
     public isLocked() {
         return !this.interactiveChildren;
     }
