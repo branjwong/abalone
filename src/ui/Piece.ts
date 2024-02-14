@@ -7,10 +7,10 @@ export class Piece extends Container {
     /** The actual image of the piece */
     private readonly image: Graphics;
 
+    /** The column index of the piece */
+    public col = 0;
     /** The row index of the piece */
     public row = 0;
-    /** The column index of the piece */
-    public column = 0;
 
     private board: Board;
 
@@ -53,7 +53,7 @@ export class Piece extends Container {
         if (this.isLocked()) return;
 
         console.log('Piece touched')
-        this.board.selectSlot({ row: this.row, column: this.column });
+        this.board.selectSlot({ col: this.col, row: this.row });
     };
 
     /** Check if piece is locked */

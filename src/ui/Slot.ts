@@ -14,9 +14,9 @@ export class Slot extends Container {
     private readonly optionEffect: Graphics;
 
     /** The row index of the piece */
-    public row: number = 0;
+    public col: number = 0;
     /** The column index of the piece */
-    public column: number = 0;
+    public row: number = 0;
 
     private piece: Piece | null = null;
 
@@ -42,8 +42,8 @@ export class Slot extends Container {
         this.addChild(this.optionEffect);
         this.optionEffect.visible = false;
 
-        this.row = row;
-        this.column = column;
+        this.col = row;
+        this.row = column;
     }
 
     public insertPiece(piece: Piece) {
@@ -67,22 +67,22 @@ export class Slot extends Container {
     }
 
     public select() {
-        console.log("Slot selected", this.row, this.column)
+        console.log("Slot selected", this.col, this.row)
         this.selectEffect.visible = true;
     }
 
     public deselect() {
-        console.log("Slot deselected", this.row, this.column)
+        console.log("Slot deselected", this.col, this.row)
         this.selectEffect.visible = false;
     }
 
     public setHighlight() {
-        console.log("Slot highlighted", this.row, this.column)
+        console.log("Slot highlighted", this.col, this.row)
         this.optionEffect.visible = true;
     }
 
     public removeHighlight() {
-        console.log("Slot dehighlighted", this.row, this.column)
+        console.log("Slot dehighlighted", this.col, this.row)
         this.optionEffect.visible = false;
     }
 }
