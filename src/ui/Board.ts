@@ -1,6 +1,7 @@
 import { Container } from 'pixi.js';
 import { Slot } from './Slot';
 import { Piece } from './Piece';
+import { Position } from './Utility';
 
 const INDENT_PER_INDEX: number = 50;
 const SLOT_SIZE: number = 100;
@@ -12,12 +13,14 @@ const HEIGHT: number = 9;
 export class Board extends Container {
     private slots: (Slot[])[] = [];
 
+    private selectedSlot: Slot | null = null;
+
     constructor() {
         super();
         this.createSlots();
         this.createBoard();
 
-        this.insertPiece(LONGEST_ROW_INDEX, LONGEST_ROW_INDEX, new Piece('red'));
+        this.insertPiece({ row: 4, column: 4 }, new Piece('red', this));
     }
 
     /**
@@ -48,7 +51,18 @@ export class Board extends Container {
         });
     }
 
-    private insertPiece(x: number, y: number, piece: Piece) {
-        this.slots[x][y].insertPiece(piece);
+    private insertPiece(position: Position, piece: Piece) {
+        this.slots[position.row][position.column].insertPiece(piece);
+        piece.row = position.row;
+        piece.column = position.column;
+    }
+
+    public selectPiece(position: Position) {
+        if (this.selectedSlot) {
+            this.selectedSlot = null;
+        } else {
+            this.selectedSlot = this.slots[position.row][position.column];
+            this.selectedSlot.select();
+        }
     }
 }
