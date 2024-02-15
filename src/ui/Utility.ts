@@ -34,18 +34,14 @@ export function fromNotation(notion: string): Position {
   return { col: parseInt(col), row: parseInt(row) };
 }
 
-export function getStorageMap(): Map<Position, number> {
-  const storageMap = new Map<Position, number>();
-  let index = 0;
-  for (let row = 0; row < HEXAGON_RANGE * 2; row++) {
-    for (let col = 0; col < HEXAGON_RANGE * 2; col++) {
-      const position = { row: row, col: col };
-      if (isPositionValid(position)) {
-        storageMap.set(position, index);
-        index++;
-      }
-    }
-  }
+export function getStorageMap(): Map<string, number> {
+  const board = getBoard();
+  const storageMap = new Map<string, number>();
+
+  board.forEach((position, index) => {
+    storageMap.set(toNotation(position), index);
+  });
+
   return storageMap;
 }
 

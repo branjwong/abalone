@@ -2,20 +2,19 @@ import { Container } from "pixi.js";
 import { Slot } from "./Slot";
 import { Piece } from "./Piece";
 import {
-  HEXAGON_RANGE,
   Position,
   getBoard,
   getOptions,
   getStorageMap,
+  toNotation,
 } from "./Utility";
 
-const INDENT_PER_INDEX: number = 50;
-const SLOT_SIZE: number = 100;
-const SPACING: number = 0;
+const Y_OFFSET: number = 100;
+const X_OFFSET: number = 55;
 
 export class Board extends Container {
   private slots: Slot[] = [];
-  private storageMap: Map<Position, number> | undefined;
+  private storageMap: Map<string, number> | undefined;
 
   private slotSelections: Slot[] = [];
   private slotOptions: Slot[] = [];
@@ -26,7 +25,7 @@ export class Board extends Container {
     this.createBoard();
     this.storageMap = getStorageMap();
 
-    // this.insertPiece({ col: 8, row: 4 }, new Piece("red", this));
+    this.insertPiece({ col: 8, row: 4 }, new Piece("red", this));
   }
 
   /**
@@ -48,17 +47,25 @@ export class Board extends Container {
     this.slots.forEach((slot) => {
       console.log(slot.col, slot.row);
 
-      // const indent = Math.abs(slot.col - HEXAGON_RANGE) * INDENT_PER_INDEX;
-      const indent = 0;
-
-      slot.x = indent + slot.col * (SLOT_SIZE + SPACING);
-      slot.y = slot.row * (SLOT_SIZE + SPACING);
+      slot.x = slot.col * X_OFFSET;
+      slot.y = slot.row * Y_OFFSET;
       this.addChild(slot);
     });
   }
 
   private getSlot(position: Position): Slot {
-    return this.slots[this.storageMap!.get(position)!];
+    if (!this.storageMap) {
+      throw new Error("Storage map is not initialized");
+    }
+    console.log(this.storageMap);
+    console.log(position);
+    console.log(this.slots);
+
+    const index = this.storageMap.get(toNotation(position))!;
+
+    console.log(index);
+
+    return this.slots[index];
   }
 
   private insertPiece(position: Position, piece: Piece) {
