@@ -1,10 +1,4 @@
-import {
-  Container,
-  FederatedPointerEvent,
-  Graphics,
-  Sprite,
-  Texture,
-} from "pixi.js";
+import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Board } from "./Board";
 import { Coordinate } from "./Utility";
 
@@ -55,7 +49,7 @@ export class Piece extends Container {
   }
 
   /** Interaction mouse/touch down handler */
-  private onPointerDown = (e: FederatedPointerEvent) => {
+  private onPointerDown = () => {
     if (this.isLocked()) return;
 
     console.log("Piece touched", this.coordinate);
