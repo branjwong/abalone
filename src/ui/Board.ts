@@ -25,7 +25,7 @@ export class Board extends Container {
     this.createBoard();
     this.storageMap = getStorageMap();
 
-    this.insertPiece({ col: 8, row: 4 }, new Piece("red", this));
+    this.createPiece("red", { col: 8, row: 4 });
   }
 
   /**
@@ -57,25 +57,20 @@ export class Board extends Container {
     if (!this.storageMap) {
       throw new Error("Storage map is not initialized");
     }
-    console.log(this.storageMap);
-    console.log(position);
-    console.log(this.slots);
 
     const index = this.storageMap.get(toNotation(position))!;
-
-    console.log(index);
 
     return this.slots[index];
   }
 
-  private insertPiece(position: Position, piece: Piece) {
+  private createPiece(color: string, position: Position) {
+    const piece = new Piece(color, position, this);
     this.getSlot(position).insertPiece(piece);
-    piece.col = position.col;
-    piece.row = position.row;
   }
 
   public selectSlot(position: Position): void {
     if (this.slotSelections.length === 1) {
+      // If a slot is already selected, deselect it and remove highlights.
       const positions = this.getSelectedPositions();
       getOptions(positions).forEach((position) =>
         this.removeHighlight(position)
@@ -84,8 +79,10 @@ export class Board extends Container {
       this.slotSelections.forEach((slot) => slot.deselect());
       this.slotSelections = [];
     } else {
+      // If no slot is selected, select the slot and highlight options.
       this.slotSelections = [this.getSlot(position)];
-      this.slotSelections.forEach((slot) => slot.select());
+
+      this.getSlot(position).select();
 
       const positions = this.getSelectedPositions();
       getOptions(positions).forEach((position) => this.setHighlight(position));
@@ -103,7 +100,7 @@ export class Board extends Container {
   public getSelectedPositions(): Position[] {
     return this.slotSelections.map((slot) => ({
       col: slot.col,
-      row: slot.col,
+      row: slot.row,
     }));
   }
 

@@ -85,7 +85,7 @@ function isPositionValid(position: Position): boolean {
 }
 
 export function getNeighbors(position: Position): Position[] {
-  return [
+  const neighbors = [
     { col: position.col - 1, row: position.row - 1 },
     { col: position.col + 1, row: position.row - 1 },
     { col: position.col - 2, row: position.row },
@@ -93,6 +93,11 @@ export function getNeighbors(position: Position): Position[] {
     { col: position.col - 1, row: position.row + 1 },
     { col: position.col + 1, row: position.row + 1 },
   ].filter((position) => isPositionValid(position));
+
+  //   console.log("position", position);
+  //   console.log("neighbors", neighbors);
+
+  return neighbors;
 }
 
 function getNeighborsForRange(positions: Position[]): Position[] {
