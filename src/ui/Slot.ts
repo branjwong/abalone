@@ -1,5 +1,6 @@
 import { Container, Graphics, Sprite, Text } from "pixi.js";
 import { Piece } from "./Piece";
+import { Coordinate, toNotation } from "./Utility";
 
 const EFFECT_SIZE = 49;
 const SELECT_COLOR = 0xfcba03;
@@ -15,14 +16,11 @@ export class Slot extends Container {
 
   private readonly text: Text;
 
-  /** The row index of the piece */
-  public col: number = 0;
-  /** The column index of the piece */
-  public row: number = 0;
+  public readonly coordinate: Coordinate;
 
   private piece: Piece | null = null;
 
-  constructor(row: number, column: number) {
+  constructor(coordinate: Coordinate) {
     super();
 
     this.image = Sprite.from("black-circle.png");
@@ -44,10 +42,9 @@ export class Slot extends Container {
     this.addChild(this.optionEffect);
     this.optionEffect.visible = false;
 
-    this.col = row;
-    this.row = column;
+    this.coordinate = coordinate;
 
-    this.text = new Text(`${this.col}, ${this.row}`, {
+    this.text = new Text(toNotation(coordinate), {
       fontFamily: "Arial",
       fontSize: 24,
       fill: 0xff1010,
@@ -78,22 +75,22 @@ export class Slot extends Container {
   }
 
   public select() {
-    console.log("Slot selected", this.col, this.row);
+    console.log("Slot selected", this.coordinate);
     this.selectEffect.visible = true;
   }
 
   public deselect() {
-    console.log("Slot deselected", this.col, this.row);
+    console.log("Slot deselected", this.coordinate);
     this.selectEffect.visible = false;
   }
 
   public setHighlight() {
-    console.log("Slot highlighted", this.col, this.row);
+    console.log("Slot highlighted", this.coordinate);
     this.optionEffect.visible = true;
   }
 
   public removeHighlight() {
-    console.log("Slot dehighlighted", this.col, this.row);
+    console.log("Slot dehighlighted", this.coordinate);
     this.optionEffect.visible = false;
   }
 }

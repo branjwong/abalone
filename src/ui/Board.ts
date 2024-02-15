@@ -2,7 +2,7 @@ import { Container } from "pixi.js";
 import { Slot } from "./Slot";
 import { Piece } from "./Piece";
 import {
-  Position,
+  Coordinate,
   getBoard,
   getOptions,
   getStorageMap,
@@ -32,10 +32,10 @@ export class Board extends Container {
    * Creates the slots on the board. The slots are stored in a 2D array.
    */
   private createSlots() {
-    const positions = getBoard();
-    console.log(positions);
-    positions.forEach((position) => {
-      const slot = new Slot(position.col, position.row);
+    const coordinates = getBoard();
+    console.log(coordinates);
+    coordinates.forEach((coordinate) => {
+      const slot = new Slot(coordinate);
       this.slots.push(slot);
     });
   }
@@ -45,66 +45,63 @@ export class Board extends Container {
    */
   private createBoard() {
     this.slots.forEach((slot) => {
-      console.log(slot.col, slot.row);
-
-      slot.x = slot.col * X_OFFSET;
-      slot.y = slot.row * Y_OFFSET;
+      slot.x = slot.coordinate.col * X_OFFSET;
+      slot.y = slot.coordinate.row * Y_OFFSET;
       this.addChild(slot);
     });
   }
 
-  private getSlot(position: Position): Slot {
+  private getSlot(coordinate: Coordinate): Slot {
     if (!this.storageMap) {
       throw new Error("Storage map is not initialized");
     }
 
-    const index = this.storageMap.get(toNotation(position))!;
+    const index = this.storageMap.get(toNotation(coordinate))!;
 
     return this.slots[index];
   }
 
-  private createPiece(color: string, position: Position) {
-    const piece = new Piece(color, position, this);
-    this.getSlot(position).insertPiece(piece);
+  private createPiece(color: string, coordinate: Coordinate) {
+    const piece = new Piece(color, coordinate, this);
+    this.getSlot(coordinate).insertPiece(piece);
   }
 
-  public selectSlot(position: Position): void {
+  public selectSlot(coordinate: Coordinate): void {
     if (this.slotSelections.length === 1) {
       // If a slot is already selected, deselect it and remove highlights.
-      const positions = this.getSelectedPositions();
-      getOptions(positions).forEach((position) =>
-        this.removeHighlight(position)
+      const coordinates = this.getSelectedCoordinates();
+      getOptions(coordinates).forEach((coordinate) =>
+        this.removeHighlight(coordinate)
       );
 
       this.slotSelections.forEach((slot) => slot.deselect());
       this.slotSelections = [];
     } else {
       // If no slot is selected, select the slot and highlight options.
-      this.slotSelections = [this.getSlot(position)];
+      this.slotSelections = [this.getSlot(coordinate)];
 
-      this.getSlot(position).select();
+      this.getSlot(coordinate).select();
 
-      const positions = this.getSelectedPositions();
-      getOptions(positions).forEach((position) => this.setHighlight(position));
+      const coordinates = this.getSelectedCoordinates();
+      getOptions(coordinates).forEach((coordinate) =>
+        this.setHighlight(coordinate)
+      );
     }
   }
 
-  private setHighlight(position: Position): void {
-    this.getSlot(position).setHighlight();
+  private setHighlight(coordinate: Coordinate): void {
+    this.getSlot(coordinate).setHighlight();
   }
 
-  private removeHighlight(position: Position): void {
-    this.getSlot(position).removeHighlight();
+  private removeHighlight(coordinate: Coordinate): void {
+    this.getSlot(coordinate).removeHighlight();
   }
 
-  public getSelectedPositions(): Position[] {
-    return this.slotSelections.map((slot) => ({
-      col: slot.col,
-      row: slot.row,
-    }));
+  public getSelectedCoordinates(): Coordinate[] {
+    return this.slotSelections.map((slot) => slot.coordinate);
   }
 
-  public getOptionPosititions(): Position[] {
-    return this.slotOptions.map((slot) => ({ col: slot.col, row: slot.col }));
+  public getOptionPosititions(): Coordinate[] {
+    return this.slotOptions.map((slot) => slot.coordinate);
   }
 }

@@ -3,13 +3,13 @@ import _uniq from "lodash/uniq";
 // https://www.redblobgames.com/grids/hexagons/
 
 /** Pair of row & column representing grid coordinates */
-export type Position = { row: number; col: number };
+export type Coordinate = { row: number; col: number };
 
 /** Board configuration */
 export const HEXAGON_RANGE = 5;
 
-export function getBoard(): Position[] {
-  let outerRing: Position[] = [{ col: 8, row: 4 }];
+export function getBoard(): Coordinate[] {
+  let outerRing: Coordinate[] = [{ col: 8, row: 4 }];
   let boardNotation: string[] = outerRing.map(toNotation);
 
   for (let i = 0; i < HEXAGON_RANGE; i++) {
@@ -17,20 +17,18 @@ export function getBoard(): Position[] {
     const outerRingNotation = outerRing.map(toNotation);
     boardNotation.push(...outerRingNotation);
 
-    boardNotation = boardNotation.filter(
-      (value, index, self) => self.indexOf(value) === index
-    );
+    boardNotation = _uniq(boardNotation);
   }
 
   return boardNotation.map(fromNotation);
 }
 
-export function toNotation(position: Position): string {
-  return `${position.col},${position.row}`;
+export function toNotation(coordinate: Coordinate): string {
+  return `${coordinate.col},${coordinate.row}`;
 }
 
-export function fromNotation(notion: string): Position {
-  const [col, row] = notion.split(",");
+export function fromNotation(notation: string): Coordinate {
+  const [col, row] = notation.split(",");
   return { col: parseInt(col), row: parseInt(row) };
 }
 
@@ -38,20 +36,20 @@ export function getStorageMap(): Map<string, number> {
   const board = getBoard();
   const storageMap = new Map<string, number>();
 
-  board.forEach((position, index) => {
-    storageMap.set(toNotation(position), index);
+  board.forEach((coordinate, index) => {
+    storageMap.set(toNotation(coordinate), index);
   });
 
   return storageMap;
 }
 
-export function getOptions(selection: Position[]): Position[] {
+export function getOptions(selection: Coordinate[]): Coordinate[] {
   if (selection.length === 0) {
     return [];
   } else if (selection.length === 1) {
-    const position = selection[0];
+    const coordinate = selection[0];
 
-    return getNeighbors(position);
+    return getNeighbors(coordinate);
   } else {
     return [];
   }
@@ -63,36 +61,36 @@ export function getOptions(selection: Position[]): Position[] {
 //     return { r: r, q: q - Math.max(0, HEXAGON_RANGE - r) };
 // }
 
-function isPositionWithinBounds(position: Position): boolean {
-  return getDistance({ col: 8, row: 4 }, position) < HEXAGON_RANGE;
+function isWithinBounds(coordinate: Coordinate): boolean {
+  return getDistance({ col: 8, row: 4 }, coordinate) < HEXAGON_RANGE;
 }
 
-function isPositionDoubledCoordinate(position: Position): boolean {
-  const sum = position.col + position.row;
+function isDoubledCoordinate(coordinate: Coordinate): boolean {
+  const sum = coordinate.col + coordinate.row;
   return sum % 2 === 0;
 }
 
-function isPositionPositiveCoordinate(position: Position): boolean {
-  return position.col >= 0 && position.row >= 0;
+function isPositiveCoordinate(coordinate: Coordinate): boolean {
+  return coordinate.col >= 0 && coordinate.row >= 0;
 }
 
-function isPositionValid(position: Position): boolean {
+function isCoordinateValid(coordinate: Coordinate): boolean {
   return (
-    isPositionWithinBounds(position) &&
-    isPositionDoubledCoordinate(position) &&
-    isPositionPositiveCoordinate(position)
+    isWithinBounds(coordinate) &&
+    isDoubledCoordinate(coordinate) &&
+    isPositiveCoordinate(coordinate)
   );
 }
 
-export function getNeighbors(position: Position): Position[] {
+export function getNeighbors(coordinate: Coordinate): Coordinate[] {
   const neighbors = [
-    { col: position.col - 1, row: position.row - 1 },
-    { col: position.col + 1, row: position.row - 1 },
-    { col: position.col - 2, row: position.row },
-    { col: position.col + 2, row: position.row },
-    { col: position.col - 1, row: position.row + 1 },
-    { col: position.col + 1, row: position.row + 1 },
-  ].filter((position) => isPositionValid(position));
+    { col: coordinate.col - 1, row: coordinate.row - 1 },
+    { col: coordinate.col + 1, row: coordinate.row - 1 },
+    { col: coordinate.col - 2, row: coordinate.row },
+    { col: coordinate.col + 2, row: coordinate.row },
+    { col: coordinate.col - 1, row: coordinate.row + 1 },
+    { col: coordinate.col + 1, row: coordinate.row + 1 },
+  ].filter((coordinate) => isCoordinateValid(coordinate));
 
   //   console.log("position", position);
   //   console.log("neighbors", neighbors);
@@ -100,15 +98,15 @@ export function getNeighbors(position: Position): Position[] {
   return neighbors;
 }
 
-function getNeighborsForRange(positions: Position[]): Position[] {
-  const neighbors: Position[] = _uniq(
-    positions.flatMap((position) => getNeighbors(position))
+function getNeighborsForRange(coordinates: Coordinate[]): Coordinate[] {
+  const neighbors: Coordinate[] = _uniq(
+    coordinates.flatMap((coordinate) => getNeighbors(coordinate))
   );
 
-  return neighbors.filter((position) => isPositionValid(position));
+  return neighbors.filter((coordinate) => isCoordinateValid(coordinate));
 }
 
-function getDistance(a: Position, b: Position): number {
+function getDistance(a: Coordinate, b: Coordinate): number {
   var dcol = Math.abs(a.col - b.col);
   var drow = Math.abs(a.row - b.row);
   return drow + Math.max(0, (dcol - drow) / 2);

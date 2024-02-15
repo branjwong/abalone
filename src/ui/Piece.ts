@@ -6,7 +6,7 @@ import {
   Texture,
 } from "pixi.js";
 import { Board } from "./Board";
-import { Position } from "./Utility";
+import { Coordinate } from "./Utility";
 
 export class Piece extends Container {
   /** The interactive area of the piece */
@@ -14,11 +14,11 @@ export class Piece extends Container {
   /** The actual image of the piece */
   private readonly image: Graphics;
 
-  public readonly coordinate: Position;
+  public readonly coordinate: Coordinate;
 
   private board: Board;
 
-  constructor(color: string, coordinate: Position, board: Board) {
+  constructor(color: string, coordinate: Coordinate, board: Board) {
     super();
     this.board = board;
 
