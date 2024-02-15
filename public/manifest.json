@@ -18,7 +18,7 @@
   "description": "Abalone is a two-player strategy board game. The game board consists of a hexagonal grid. Each player has 14 marbles that rest in the spaces on the board and are initially arranged as shown in the diagram. The players take turns with one move per turn. A move consists of moving a line of one, two or three marbles in line (as in Checkers) in any one direction. A move can push one, two or three marbles of the opponent. The marbles can be pushed to any direction (even backwards) as long as the move is in line. The move can be continued as long as the line is unblocked. The player who has pushed six of the opponent's marbles off the board wins the game. The game is won by the opponent if the player has no legal moves.",
   "screenshots": [
     {
-      "src": "/images/screenshot1.png",
+      "src": "/screenshots/screenshot1.png",
       "type": "image/png",
       "sizes": "1440x3040",
       "form_factor": "narrow"
