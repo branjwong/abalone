@@ -2,7 +2,8 @@ import { Container, Graphics, Sprite, Text } from "pixi.js";
 import { Piece } from "./Piece";
 import { Coordinate, toNotation } from "./Utility";
 
-const EFFECT_SIZE = 49;
+const SPRITE_SIZE = 35;
+const EFFECT_SIZE = 34;
 const SELECT_COLOR = 0xfcba03;
 const OPTION_COLOR = 0xb5b2aa;
 
@@ -25,19 +26,24 @@ export class Slot extends Container {
 
     this.image = Sprite.from("black-circle.png");
     this.image.anchor.set(0.5);
-    this.image.scale.set(0.1);
+    this.image.width = SPRITE_SIZE;
+    this.image.height = SPRITE_SIZE;
     this.addChild(this.image);
 
     this.selectEffect = new Graphics();
     this.selectEffect.beginFill(SELECT_COLOR);
-    this.selectEffect.drawCircle(0, 0, EFFECT_SIZE);
+    this.selectEffect.drawCircle(0, 0, 1);
     this.selectEffect.endFill();
+    this.selectEffect.width = EFFECT_SIZE;
+    this.selectEffect.height = EFFECT_SIZE;
     this.addChild(this.selectEffect);
     this.selectEffect.visible = false;
 
     this.optionEffect = new Graphics();
     this.optionEffect.beginFill(OPTION_COLOR);
-    this.optionEffect.drawCircle(0, 0, EFFECT_SIZE);
+    this.optionEffect.drawCircle(0, 0, 1);
+    this.optionEffect.width = EFFECT_SIZE;
+    this.optionEffect.height = EFFECT_SIZE;
     this.optionEffect.endFill();
     this.addChild(this.optionEffect);
     this.optionEffect.visible = false;
@@ -46,7 +52,7 @@ export class Slot extends Container {
 
     this.text = new Text(toNotation(coordinate), {
       fontFamily: "Arial",
-      fontSize: 24,
+      fontSize: 14,
       fill: 0xff1010,
       align: "center",
     });

@@ -9,8 +9,8 @@ import {
   toNotation,
 } from "./Utility";
 
-const Y_OFFSET: number = 100;
-const X_OFFSET: number = 55;
+const Y_OFFSET: number = 40;
+const X_OFFSET: number = 18;
 
 export class Board extends Container {
   private slots: Slot[] = [];

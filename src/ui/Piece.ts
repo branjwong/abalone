@@ -2,6 +2,7 @@ import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Board } from "./Board";
 import { Coordinate } from "./Utility";
 
+const PIECE_SIZE = 30;
 export class Piece extends Container {
   /** The interactive area of the piece */
   private readonly area: Sprite;
@@ -18,14 +19,17 @@ export class Piece extends Container {
 
     this.image = new Graphics();
     this.image.beginFill(0xffffff);
-    this.image.drawCircle(0, 0, 45);
+    this.image.drawCircle(0, 0, 1);
     this.image.endFill();
+    this.image.width = PIECE_SIZE;
+    this.image.height = PIECE_SIZE;
     this.fillColor(color);
     this.addChild(this.image);
 
     this.area = Sprite.from(Texture.WHITE);
     this.area.anchor.set(0.5);
-    this.area.scale.set(6);
+    this.area.width = PIECE_SIZE;
+    this.area.height = PIECE_SIZE;
     this.area.alpha = 0;
     this.addChild(this.area);
     this.area.eventMode = "static";
